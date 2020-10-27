@@ -1,0 +1,27 @@
+{
+    "name": "magtools/m2-core",
+    "homepage": "https://github.com/magtools",
+    "description": "Core Module",
+    "authors":[
+        {
+        "name":  "Martin Gonzalez",
+        "homepage": "https://github.com/magtools/"
+        }
+    ],
+    "keywords": [
+        "magento2"
+    ],
+    "version": "0.1.0",
+    "type": "magento2-module",
+    "license": "Apache-2.0",
+    "minimum-stability": "stable",
+    "require": {
+        "magento/framework": "*"
+    },
+    "autoload": {
+        "files": [ "registration.php" ],
+        "psr-4": {
+            "Mtools\\Core\\": ""
+        }
+    }
+}

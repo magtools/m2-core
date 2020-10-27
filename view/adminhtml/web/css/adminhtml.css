@@ -1,0 +1,15 @@
+.config-nav .mtools-tab .admin__page-nav-title::before {
+    content: '';
+    background-image: url("../images/mtools.png");
+    background-repeat: no-repeat;
+    background-size: 100%;
+    background-position: 0 0;
+    height: 50px;
+    position: absolute;
+    width: 100px;
+    top: 12px;
+}
+
+.config-nav .mtools-tab .admin__page-nav-title strong {
+    margin-left: 100px;
+}
