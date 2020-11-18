@@ -2,37 +2,66 @@
 
 namespace Mtools\Core\Model\Config;
 
-/**
- * Config backend model for version display.
- */
+use Magento\Framework\Registry;
+use Magento\Framework\Model\Context;
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\App\Cache\TypeListInterface;
+use Magento\Framework\Module\ResourceInterface;
+use Magento\Framework\Model\ResourceModel\AbstractResource;
+use Magento\Framework\Data\Collection\AbstractDb;
+use Magento\Framework\Module\ModuleList;
+use Magento\Framework\Module\Manager;
+
+
 class Version extends \Magento\Framework\App\Config\Value
 {
     /**
-     * @var \Magento\Framework\Module\ResourceInterface
+     * @const
+     */
+    const MTOOLS_VENDOR = 'Mtools';
+
+    /**
+     * @var ResourceInterface
      */
     protected $moduleResource;
 
     /**
-     * @param \Magento\Framework\Model\Context $context
-     * @param \Magento\Framework\Registry $registry
-     * @param \Magento\Framework\App\Config\ScopeConfigInterface $config
-     * @param \Magento\Framework\App\Cache\TypeListInterface $cacheTypeList
-     * @param \Magento\Framework\Module\ResourceInterface $moduleResource
-     * @param \Magento\Framework\Model\ResourceModel\AbstractResource $resource
-     * @param \Magento\Framework\Data\Collection\AbstractDb $resourceCollection
+     * @var ModuleList
+     */
+    protected $moduleList;
+
+    /**
+     * @var Manager
+     */
+    protected $moduleManager;
+
+    /**
+     * @param Context $context
+     * @param Registry $registry
+     * @param ScopeConfigInterface $config
+     * @param TypeListInterface $cacheTypeList
+     * @param ResourceInterface $moduleResource
+     * @param AbstractResource $resource
+     * @param AbstractDb $resourceCollection
+     * @param ModuleList $moduleList
+     * @param Manager $moduleManager
      * @param array $data
      */
     public function __construct(
-        \Magento\Framework\Model\Context $context,
-        \Magento\Framework\Registry $registry,
-        \Magento\Framework\App\Config\ScopeConfigInterface $config,
-        \Magento\Framework\App\Cache\TypeListInterface $cacheTypeList,
-        \Magento\Framework\Module\ResourceInterface $moduleResource,
-        \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
-        \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
+        Context $context,
+        Registry $registry,
+        ScopeConfigInterface $config,
+        TypeListInterface $cacheTypeList,
+        ResourceInterface $moduleResource,
+        AbstractResource $resource = null,
+        AbstractDb $resourceCollection = null,
+        ModuleList $moduleList,
+        Manager $moduleManager,
         array $data = []
     ) {
         $this->moduleResource = $moduleResource;
+        $this->moduleList = $moduleList;
+        $this->moduleManager = $moduleManager;
 
         parent::__construct(
             $context,
@@ -46,14 +75,33 @@ class Version extends \Magento\Framework\App\Config\Value
     }
 
     /**
-     * Inject current installed module version as the config value.
-     *
      * @return void
      */
     public function afterLoad()
     {
-        $version = $this->moduleResource->getDbVersion('Mtools_Core');
+        $this->setValue($this->getCustomModules());
+    }
 
-        $this->setValue($version);
+    /**
+     * @return string
+     * @throws \Safe\Exceptions\JsonException
+     */
+    protected function getCustomModules()
+    {
+        $result = [];
+
+        $modules = $this->moduleList->getNames();
+        foreach ($modules as $_module) {
+            if(strpos($_module, self::MTOOLS_VENDOR) !== false)
+            {
+                $result[] = [
+                    'name' => $_module,
+                    'version' => $this->moduleResource->getDbVersion($_module),
+                    'active' => (int)(bool)$this->moduleManager->isEnabled($_module)
+                ];
+            }
+        }
+
+        return \Safe\json_encode($result);
     }
 }

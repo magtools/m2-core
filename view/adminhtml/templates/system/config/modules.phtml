@@ -1,0 +1,24 @@
+<style>
+    .mtools-modules{
+        padding-left: 50px;
+    }
+    .mtools-modules th{
+        text-align: left;
+    }
+</style>
+<div class="mtools-modules">
+    <table>
+        <tr>
+            <th><?= __('Module Name') ?></th>
+            <th><?= __('Module Version') ?></th>
+            <th><?= __('Is Active') ?></th>
+        </tr>
+        <?php foreach ($this->getModules() as $module): ?>
+        <tr>
+            <td><?= $module['name'] ?></td>
+            <td><?= $module['version'] ?></td>
+            <td><?= (bool)(int)$module['active'] ? __('Yes') : __('No') ?></td>
+        </tr>
+        <?php endforeach; ?>
+    </table>
+</div>
