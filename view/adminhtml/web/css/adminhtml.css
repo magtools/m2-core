@@ -15,3 +15,39 @@
     margin-left: 100px;
 }
 */
+
+span.grid-severity-notice,
+span.grid-severity-minor,
+span.grid-severity-major,
+span.grid-severity-critical{
+    padding: 5px 3px 4px;
+}
+
+.grid-severity-minor.pending {
+    color: #d28d0d;
+    border-color: #eda323;
+}
+
+.grid-severity-minor.missed {
+    color: #e46423;
+    background-color: #fffdb8;
+    border-color: #eda323;
+}
+
+.grid-severity-notice.success {
+    color: #5b8116;
+}
+
+.grid-severity-notice.running {
+    color: #3c7dd9;
+    background-color: #bfd6f6;
+    border-color: #3c7dd9;
+}
+
+.mtoolscronrun-schedule-grid .data-grid-cell-content{
+    overflow: visible;
+}
+
+.mtoolscronrun-schedule-grid .data-grid-cell-content span{
+    margin: -5px 0;
+}
