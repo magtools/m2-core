@@ -22,8 +22,7 @@ class Modules extends \Magento\Config\Block\System\Config\Form\Field
         Context $context,
         ScopeConfigInterface $scopeConfig,
         array $data = []
-    )
-    {
+    ) {
         $this->_scopeConfig = $scopeConfig;
         parent::__construct($context, $data);
     }
@@ -52,5 +51,4 @@ class Modules extends \Magento\Config\Block\System\Config\Form\Field
 
         return $this->_toHtml();
     }
-
 }

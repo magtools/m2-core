@@ -12,7 +12,6 @@ use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Framework\Module\ModuleList;
 use Magento\Framework\Module\Manager;
 
-
 class Version extends \Magento\Framework\App\Config\Value
 {
     /**
@@ -92,8 +91,7 @@ class Version extends \Magento\Framework\App\Config\Value
 
         $modules = $this->moduleList->getNames();
         foreach ($modules as $_module) {
-            if(strpos($_module, self::MTOOLS_VENDOR) !== false)
-            {
+            if (strpos($_module, self::MTOOLS_VENDOR) !== false) {
                 $result[] = [
                     'name' => $_module,
                     'version' => $this->moduleResource->getDbVersion($_module),
