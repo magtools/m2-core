@@ -45,6 +45,8 @@ class Version extends \Magento\Framework\App\Config\Value
      * @param ModuleList $moduleList
      * @param Manager $moduleManager
      * @param array $data
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         Context $context,
@@ -90,12 +92,12 @@ class Version extends \Magento\Framework\App\Config\Value
         $result = [];
 
         $modules = $this->moduleList->getNames();
-        foreach ($modules as $_module) {
-            if (strpos($_module, self::MTOOLS_VENDOR) !== false) {
+        foreach ($modules as $module) {
+            if (strpos($module, self::MTOOLS_VENDOR) !== false) {
                 $result[] = [
-                    'name' => $_module,
-                    'version' => $this->moduleResource->getDbVersion($_module),
-                    'active' => (int)(bool)$this->moduleManager->isEnabled($_module)
+                    'name' => $module,
+                    'version' => $this->moduleResource->getDbVersion($module),
+                    'active' => (int)(bool)$this->moduleManager->isEnabled($module)
                 ];
             }
         }

@@ -9,15 +9,15 @@
 <div class="mtools-modules">
     <table>
         <tr>
-            <th><?= __('Module Name') ?></th>
-            <th><?= __('Module Version') ?></th>
-            <th><?= __('Is Active') ?></th>
+            <th><?= $escaper->escapeHtml(__('Module Name')) ?></th>
+            <th><?= $escaper->escapeHtml(__('Module Version')) ?></th>
+            <th><?= $escaper->escapeHtml(__('Is Active')) ?></th>
         </tr>
-        <?php foreach ($this->getModules() as $module): ?>
+        <?php foreach ($block->getModules() as $module): ?>
         <tr>
-            <td><?= $module['name'] ?></td>
-            <td><?= $module['version'] ?></td>
-            <td><?= (bool)(int)$module['active'] ? __('Yes') : __('No') ?></td>
+            <td><?= $escaper->escapeHtml($module['name']) ?></td>
+            <td><?= $escaper->escapeHtml($module['version']) ?></td>
+            <td><?= $escaper->escapeHtml((bool)(int)$module['active'] ? __('Yes') : __('No')) ?></td>
         </tr>
         <?php endforeach; ?>
     </table>

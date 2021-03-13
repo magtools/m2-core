@@ -29,6 +29,8 @@ class Modules extends \Magento\Config\Block\System\Config\Form\Field
 
     /**
      * @return $this
+     *
+     * @SuppressWarnings(PHPMD.CamelCaseMethodName)
      */
     protected function _prepareLayout()
     {
@@ -38,10 +40,12 @@ class Modules extends \Magento\Config\Block\System\Config\Form\Field
         }
         return $this;
     }
+
     /**
      * @param AbstractElement $element
-     *
      * @return string
+     *
+     * @SuppressWarnings(PHPMD.CamelCaseMethodName)
      */
     protected function _getElementHtml(AbstractElement $element)
     {
