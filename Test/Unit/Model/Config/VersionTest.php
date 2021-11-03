@@ -22,33 +22,15 @@ class VersionTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp():void
     {
-        $this->context = $this->getMockBuilder('Magento\Framework\Model\Context')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $this->registry = $this->getMockBuilder('Magento\Framework\Registry')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $this->config = $this->getMockBuilder('Magento\Framework\App\Config\ScopeConfigInterface')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $this->cacheTypeList = $this->getMockBuilder('Magento\Framework\App\Cache\TypeListInterface')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $this->moduleResource = $this->getMockBuilder('Magento\Framework\Module\ResourceInterface')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $this->resource = $this->getMockBuilder('Magento\Framework\Model\ResourceModel\AbstractResource')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $this->resourceCollection = $this->getMockBuilder('Magento\Framework\Data\Collection\AbstractDb')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $this->moduleList = $this->getMockBuilder('Magento\Framework\Module\ModuleList')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $this->moduleManager = $this->getMockBuilder('Magento\Framework\Module\Manager')
-            ->disableOriginalConstructor()
-            ->getMock();
+        $this->getMockedDependency('context','Magento\Framework\Model\Context');
+        $this->getMockedDependency('registry','Magento\Framework\Registry');
+        $this->getMockedDependency('config','Magento\Framework\App\Config\ScopeConfigInterface');
+        $this->getMockedDependency('cacheTypeList','Magento\Framework\App\Cache\TypeListInterface');
+        $this->getMockedDependency('moduleResource','Magento\Framework\Module\ResourceInterface');
+        $this->getMockedDependency('resource','Magento\Framework\Model\ResourceModel\AbstractResource');
+        $this->getMockedDependency('resourceCollection','Magento\Framework\Data\Collection\AbstractDb');
+        $this->getMockedDependency('moduleList','Magento\Framework\Module\ModuleList');
+        $this->getMockedDependency('moduleManager','Magento\Framework\Module\Manager');
 
         $this->versionObj = new \Mtools\Core\Model\Config\Version(
             $this->context,
@@ -62,7 +44,19 @@ class VersionTest extends \PHPUnit\Framework\TestCase
             $this->moduleManager,
             $this->data
         );
+
         $this->versionRef = new \ReflectionClass(\Mtools\Core\Model\Config\Version::class);
+    }
+
+    /**
+     * @param $propertyName
+     * @param $className
+     */
+    protected function getMockedDependency($propertyName, $className)
+    {
+        $this->{$propertyName} = $this->getMockBuilder($className)
+            ->disableOriginalConstructor()
+            ->getMock();
     }
 
     /**
@@ -90,19 +84,35 @@ class VersionTest extends \PHPUnit\Framework\TestCase
 
     public function dataProvider()
     {
-        /*
-         data : [
+        /* data : [
             'test case description' => [
-                list,
-                version,
-                status,
-                expected_result
+                list, version, status, expected_result
                 ],
-        ]
-         */
+        ] */
         return [
             'Empty module list' => [
                 [], '1.2.0', 1, '[]'
+            ],
+            'Module list without matches' => [
+                ['Test_Customer','Test_Cms'], '1.2.0', 1, '[]'
+            ],
+            'Module list with match enabled' => [
+                ['Test_Customer','Test_Cms','Mtools_Core'],
+                '1.2.0',
+                1,
+                '[{"name":"Mtools_Core","version":"1.2.0","active":1}]'
+            ],
+            'Module list with match disabled' => [
+                ['Test_Customer','Test_Cms','Mtools_Core'],
+                '1.2.0',
+                0,
+                '[{"name":"Mtools_Core","version":"1.2.0","active":0}]'
+            ],
+            'Module list with multiple matches' => [
+                ['Test_Customer','Test_Cms','Mtools_Core','Mtools_CronRun'],
+                '1.2.0',
+                1,
+                '[{"name":"Mtools_Core","version":"1.2.0","active":1},{"name":"Mtools_CronRun","version":"1.2.0","active":1}]'
             ]
         ];
     }
