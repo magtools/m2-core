@@ -17,8 +17,8 @@ class VersionTest extends \PHPUnit\Framework\TestCase
     protected $moduleManager;
     protected $data = [];
 
-    protected $versionObj;
-    protected $versionRef;
+    protected $versionObject;
+    protected $versionReflection;
 
     protected function setUp():void
     {
@@ -32,7 +32,7 @@ class VersionTest extends \PHPUnit\Framework\TestCase
         $this->getMockedDependency('moduleList','Magento\Framework\Module\ModuleList');
         $this->getMockedDependency('moduleManager','Magento\Framework\Module\Manager');
 
-        $this->versionObj = new \Mtools\Core\Model\Config\Version(
+        $this->versionObject = new \Mtools\Core\Model\Config\Version(
             $this->context,
             $this->registry,
             $this->config,
@@ -45,7 +45,7 @@ class VersionTest extends \PHPUnit\Framework\TestCase
             $this->data
         );
 
-        $this->versionRef = new \ReflectionClass(\Mtools\Core\Model\Config\Version::class);
+        $this->versionReflection = new \ReflectionClass(\Mtools\Core\Model\Config\Version::class);
     }
 
     /**
@@ -66,7 +66,7 @@ class VersionTest extends \PHPUnit\Framework\TestCase
      */
     public function testGetCustomValues($list, $version, $status, $expected)
     {
-        $method = $this->versionRef->getMethod('getCustomModules');
+        $method = $this->versionReflection->getMethod('getCustomModules');
         $method->setAccessible(true);
 
         $this->moduleList->method('getNames')
@@ -78,7 +78,7 @@ class VersionTest extends \PHPUnit\Framework\TestCase
         $this->moduleManager->method('isEnabled')
             ->willReturn($status);
 
-        $getCustomModules = $method->invoke($this->versionObj);
+        $getCustomModules = $method->invoke($this->versionObject);
         $this->assertEquals($getCustomModules, $expected);
     }
 
