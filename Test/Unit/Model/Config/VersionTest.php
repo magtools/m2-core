@@ -2,7 +2,10 @@
 
 namespace Mtools\Core\Test\Unit\Model\Config;
 
-class VersionTest extends \PHPUnit\Framework\TestCase
+use PHPUnit\Framework\TestCase;
+use Mtools\Core\Model\Config\Version;
+
+class VersionTest extends TestCase
 {
 
     protected $context;
@@ -21,30 +24,20 @@ class VersionTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp():void
     {
-        $this->getMockedDependency('context', 'Magento\Framework\Model\Context');
-        $this->getMockedDependency('registry', 'Magento\Framework\Registry');
-        $this->getMockedDependency('config', 'Magento\Framework\App\Config\ScopeConfigInterface');
-        $this->getMockedDependency('cacheTypeList', 'Magento\Framework\App\Cache\TypeListInterface');
-        $this->getMockedDependency('moduleResource', 'Magento\Framework\Module\ResourceInterface');
-        $this->getMockedDependency('resource', 'Magento\Framework\Model\ResourceModel\AbstractResource');
-        $this->getMockedDependency('resourceCollection', 'Magento\Framework\Data\Collection\AbstractDb');
-        $this->getMockedDependency('moduleList', 'Magento\Framework\Module\ModuleList');
-        $this->getMockedDependency('moduleManager', 'Magento\Framework\Module\Manager');
-
-        $this->versionObject = new \Mtools\Core\Model\Config\Version(
-            $this->context,
-            $this->registry,
-            $this->config,
-            $this->cacheTypeList,
-            $this->moduleResource,
-            $this->resource,
-            $this->resourceCollection,
-            $this->moduleList,
-            $this->moduleManager,
+        $this->versionObject = new Version(
+            $this->getMockedDependency('context', 'Magento\Framework\Model\Context'),
+            $this->getMockedDependency('registry', 'Magento\Framework\Registry'),
+            $this->getMockedDependency('config', 'Magento\Framework\App\Config\ScopeConfigInterface'),
+            $this->getMockedDependency('cacheTypeList', 'Magento\Framework\App\Cache\TypeListInterface'),
+            $this->getMockedDependency('moduleResource', 'Magento\Framework\Module\ResourceInterface'),
+            $this->getMockedDependency('resource', 'Magento\Framework\Model\ResourceModel\AbstractResource'),
+            $this->getMockedDependency('resourceCollection', 'Magento\Framework\Data\Collection\AbstractDb'),
+            $this->getMockedDependency('moduleList', 'Magento\Framework\Module\ModuleList'),
+            $this->getMockedDependency('moduleManager', 'Magento\Framework\Module\Manager'),
             $this->data
         );
 
-        $this->versionReflection = new \ReflectionClass(\Mtools\Core\Model\Config\Version::class);
+        $this->versionReflection = new \ReflectionClass(Version::class);
     }
 
     /**
@@ -53,9 +46,12 @@ class VersionTest extends \PHPUnit\Framework\TestCase
      */
     protected function getMockedDependency($propertyName, $className)
     {
-        $this->{$propertyName} = $this->getMockBuilder($className)
-            ->disableOriginalConstructor()
-            ->getMock();
+        if (empty($this->{$propertyName})) {
+            $this->{$propertyName} = $this->getMockBuilder($className)
+                ->disableOriginalConstructor()
+                ->getMock();
+        }
+        return $this->{$propertyName};
     }
 
     /**
@@ -83,14 +79,9 @@ class VersionTest extends \PHPUnit\Framework\TestCase
 
     public function dataProvider()
     {
-        /* data : [
-            'test case description' => [
-                list, version, status, expected_result
-                ],
-        ] */
         return [
-            'Empty module list' => [
-                [], '1.2.0', 1, '[]'
+            'Empty module list' => [ /* test case description */
+                [], '1.2.0', 1, '[]' /* params: list, version, status, expected_result */
             ],
             'Module list without matches' => [
                 ['Test_Customer','Test_Cms'], '1.2.0', 1, '[]'
