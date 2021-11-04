@@ -57,7 +57,7 @@ elif [ "${tool}" = 'testPR' ] ; then
         ruleset='app/devops/TestPR.xml'
         standar=vendor/magento/magento-coding-standard/Magento2
         fileName=$(printf "%s/%s_%s.txt\n" "${outputPath}" "${tool}" "WhyHasFailed")
-        if ! php ${cmdPath[testPR]} --standard=${standar} --severity=7 ${pathCode} ${pathDesign} > ${fileName}; then
+        if ! php ${cmdPath[testPR]} --ignore=*/Test/Unit/* --standard=${standar} --severity=7 ${pathCode} ${pathDesign} > ${fileName}; then
             let errorFound++
         fi
         echo "PHP MESS DETECTOR " >> ${fileName}
@@ -87,7 +87,7 @@ else
     # PHPCS commands
     if [ "${tool}" = 'phpcs' ] ; then
       standar=vendor/magento/magento-coding-standard/Magento2
-      if ! php ${cmdPath[${tool}]} --standard=${standar} ${path} > ${fileName}; then
+      if ! php ${cmdPath[${tool}]} --ignore=*/Test/Unit/* --standard=${standar} ${path} > ${fileName}; then
           let errorFound++
       fi
     fi
@@ -95,7 +95,7 @@ else
     # PHPCBF commands
     if [ "${tool}" = 'phpcbf' ] ; then
       standar=vendor/magento/magento-coding-standard/Magento2
-      if ! php ${cmdPath[${tool}]} --standard=${standar} ${path} > ${fileName}; then
+      if ! php ${cmdPath[${tool}]} --ignore=*/Test/Unit/* --standard=${standar} ${path} > ${fileName}; then
           let errorFound++
       fi
     fi
@@ -110,7 +110,7 @@ else
       do :
         echo ' '${rule} >> ${fileName}
         echo '============================================================' >> ${fileName}
-        if ! php ${cmdPath[${tool}]} ${path} ${mode} ${rulesetPath}/${rule}.xml >> ${fileName}; then
+        if ! php ${cmdPath[${tool}]} ${path} ${mode} ${rulesetPath}/${rule}.xml --exclude */Unit/*Test.php >> ${fileName}; then
             let errorFound++
         fi
         echo ' ' >> ${fileName}

@@ -2,7 +2,6 @@
 
 namespace Mtools\Core\Test\Unit\Model\Config;
 
-
 class VersionTest extends \PHPUnit\Framework\TestCase
 {
 
@@ -22,15 +21,15 @@ class VersionTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp():void
     {
-        $this->getMockedDependency('context','Magento\Framework\Model\Context');
-        $this->getMockedDependency('registry','Magento\Framework\Registry');
-        $this->getMockedDependency('config','Magento\Framework\App\Config\ScopeConfigInterface');
-        $this->getMockedDependency('cacheTypeList','Magento\Framework\App\Cache\TypeListInterface');
-        $this->getMockedDependency('moduleResource','Magento\Framework\Module\ResourceInterface');
-        $this->getMockedDependency('resource','Magento\Framework\Model\ResourceModel\AbstractResource');
-        $this->getMockedDependency('resourceCollection','Magento\Framework\Data\Collection\AbstractDb');
-        $this->getMockedDependency('moduleList','Magento\Framework\Module\ModuleList');
-        $this->getMockedDependency('moduleManager','Magento\Framework\Module\Manager');
+        $this->getMockedDependency('context', 'Magento\Framework\Model\Context');
+        $this->getMockedDependency('registry', 'Magento\Framework\Registry');
+        $this->getMockedDependency('config', 'Magento\Framework\App\Config\ScopeConfigInterface');
+        $this->getMockedDependency('cacheTypeList', 'Magento\Framework\App\Cache\TypeListInterface');
+        $this->getMockedDependency('moduleResource', 'Magento\Framework\Module\ResourceInterface');
+        $this->getMockedDependency('resource', 'Magento\Framework\Model\ResourceModel\AbstractResource');
+        $this->getMockedDependency('resourceCollection', 'Magento\Framework\Data\Collection\AbstractDb');
+        $this->getMockedDependency('moduleList', 'Magento\Framework\Module\ModuleList');
+        $this->getMockedDependency('moduleManager', 'Magento\Framework\Module\Manager');
 
         $this->versionObject = new \Mtools\Core\Model\Config\Version(
             $this->context,
