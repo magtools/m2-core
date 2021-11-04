@@ -10,6 +10,8 @@
         My custom rule set that checks my code...
     </description>
 
+    <exclude-pattern>*/Unit/*Test.php</exclude-pattern>
+
     <!-- Import the entire unused code rule set -->
     <rule ref="rulesets/unusedcode.xml">
         <exclude name="UnusedParameter" />

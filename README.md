@@ -2,7 +2,8 @@
 Magento 2 core module
 
 ## codeanalyzer.sh
-Copy the file to the magento root and perform fast static code reviews.
+Copy the devops/codeanalyzer file to the magento root and perform fast static code reviews. 
+You also need to copy the devops/TestPR.xml ruleset file for option 4 and bitbucket pipeline. 
 
 $ bash codeanalyzer.sh
 
@@ -10,6 +11,8 @@ $ bash codeanalyzer.sh
     1) phpcs
     2) phpcbf
     3) phpmd
+    4) testPR
+    5) HELP
     which tool do you want to use? 3
     you selected phpmd!
     
@@ -45,3 +48,23 @@ Example:
 
     [vendor]/[project] = composer.json package name
     extensions/[vendor]/[project] or extensions/magtools/m2-core     
+
+## devdump.sh
+This is a dump script that do not export sensitive data from certain tables.
+You can find this file on devops folder.
+
+Configure:
+
+    HOST="localhost"
+    USER="root"
+    PASSWORD="password"
+    PORT="3306"
+
+Usage:
+
+    $ bash devdump.sh dbname 
+    $ bash devdump.sh dbname compact #no sales info
+    
+## bitbucket-pipelines.yml
+This is a pipeline for bitbucket that runs on pull requests create/update events running code analysis tools.
+You can find this file on devops/bitbucket-pipelines.yml

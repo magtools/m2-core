@@ -23,10 +23,14 @@ phpmd
 testPR
 HELP
 );
+
+# Error found flag
+errorFound=0
+
 # Tools selector
 PS3="which tool do you want to use? "
 echo -e "Code Analizer for Magento2\n"; \
-select tool in "${cmd[@]}"; do echo -e "\n  you selected ${tool}"'!'; break; done
+select tool in "${cmd[@]}"; do echo -e "\n  running ${tool}"'!'; break; done
 echo ''
 
 ### Check for HELP and TEST first
@@ -41,14 +45,26 @@ if [ "${tool}" = 'HELP' ]; then
     exit 1;
 elif [ "${tool}" = 'testPR' ] ; then
     # jenkins pipeline checks for phpcs serverity >= 7
-    pathCode='app/code'
-    pathDesign='app/design'
-    ruleset='vendor/magtools/m2-core/devops/TestPR.xml'
-    standar=vendor/magento/magento-coding-standard/Magento2
-    fileName=$(printf "%s/%s_%s.txt\n" "${outputPath}" "${tool}" "WhyHasFailed")
-    php ${cmdPath[testPR]} --standard=${standar} --severity=7 ${pathCode} ${pathDesign} > ${fileName} # | wc -l
-    echo "PHP MESS DETECTOR " >> ${fileName}
-    php ${cmdPath[testPRMD]} ${pathCode} text ${ruleset} >> ${fileName} # | wc -l
+    if [ ! -f app/devops/TestPR.xml ]; then
+        echo -e "\033[0;31m  Ruleset file not found! \033[0m"
+        echo -e "\033[0;31m  Please copy the file from Mtools_Core: \033[0m"
+        echo -e "\033[0;31m  magtools/m2-core/devops/TestPR.xml to app/devops/TestPR.xml and try again \033[0m"
+        echo " "
+        exit 1;
+    else
+        pathCode='app/code'
+        pathDesign='app/design'
+        ruleset='app/devops/TestPR.xml'
+        standar=vendor/magento/magento-coding-standard/Magento2
+        fileName=$(printf "%s/%s_%s.txt\n" "${outputPath}" "${tool}" "WhyHasFailed")
+        if ! php ${cmdPath[testPR]} --standard=${standar} --severity=7 ${pathCode} ${pathDesign} > ${fileName}; then
+            let errorFound++
+        fi
+        echo "PHP MESS DETECTOR " >> ${fileName}
+        if ! php ${cmdPath[testPRMD]} ${pathCode} text ${ruleset} >> ${fileName}; then
+            let errorFound++
+        fi
+    fi
 else
     # Code paths to analyze
     cod=(app/code/*/);
@@ -60,7 +76,7 @@ else
     # Code path selector
     PS3="which path do you want to process? "
     echo "There are ${#array[@]} available paths to process"; \
-    select path in "${array[@]}"; do echo "you selected ${path}"'!'; break; done
+    select path in "${array[@]}"; do echo -e "\n  running ${tool} on ${path}"'...'; break; done
     echo ''
 
     # Full path filename [path]/[tool]_[pool]_[package]
@@ -71,13 +87,17 @@ else
     # PHPCS commands
     if [ "${tool}" = 'phpcs' ] ; then
       standar=vendor/magento/magento-coding-standard/Magento2
-      php ${cmdPath[${tool}]} --standard=${standar} ${path} > ${fileName}
+      if ! php ${cmdPath[${tool}]} --standard=${standar} ${path} > ${fileName}; then
+          let errorFound++
+      fi
     fi
 
     # PHPCBF commands
     if [ "${tool}" = 'phpcbf' ] ; then
       standar=vendor/magento/magento-coding-standard/Magento2
-      php ${cmdPath[${tool}]} --standard=${standar} ${path} > ${fileName}
+      if ! php ${cmdPath[${tool}]} --standard=${standar} ${path} > ${fileName}; then
+          let errorFound++
+      fi
     fi
 
     # PHPMD commands
@@ -90,12 +110,20 @@ else
       do :
         echo ' '${rule} >> ${fileName}
         echo '============================================================' >> ${fileName}
-        php ${cmdPath[${tool}]} ${path} ${mode} ${rulesetPath}/${rule}.xml >> ${fileName}
+        if ! php ${cmdPath[${tool}]} ${path} ${mode} ${rulesetPath}/${rule}.xml >> ${fileName}; then
+            let errorFound++
+        fi
         echo ' ' >> ${fileName}
       done
     fi
 fi
 
 # Message with output location
-echo "Processed path ${path} with ${tool}, you can find the output in ${fileName}"
+if [ ${errorFound} -gt 0 ]; then
+    echo -e "\033[0;31m  Some issues were found, please check at the output file \033[0m"
+else
+    echo -e "\033[0;32m  No issues were found! \033[0m"
+fi
+echo ''
+echo "  Processed path ${path} with ${tool}, you can find the output in ${fileName}"
 echo ''
