@@ -2,8 +2,8 @@
 Magento 2 core module
 
 ## codeanalyzer.sh
-Copy the devops/codeanalyzer file to the magento root and perform fast static code reviews. 
-You also need to copy the devops/TestPR.xml ruleset file for option 4 and bitbucket pipeline. 
+Copy the devops/codeanalyzer.sh file to the magento root and perform fast static code reviews. 
+You also need to copy the devops/TestPR.xml ruleset file to app/devops/TestPr.xml to use option 4 and bitbucket pipeline. 
 
 $ bash codeanalyzer.sh
 
@@ -67,4 +67,4 @@ Usage:
     
 ## bitbucket-pipelines.yml
 This is a pipeline for bitbucket that runs on pull requests create/update events running code analysis tools.
-You can find this file on devops/bitbucket-pipelines.yml
+You will find this file on devops/bitbucket-pipelines.yml, also need to copy the devops/TestPR.xml ruleset file to app/devops/TestPr.xml to use bitbucket pipeline and codeanalyzer.sh option 4.
