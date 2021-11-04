@@ -1,0 +1,27 @@
+# Magento phpcs/phpmd bitbucket pipeline
+# php vendor/squizlabs/php_codesniffer/bin/phpcs --standard=vendor/magento/magento-coding-standard/Magento2 --severity=9  app/code app/design | wc -l
+# You can specify a custom docker image from Docker Hub as your build environment.
+image: summasolutions/php:7.4-fpm
+
+options:
+  max-time: 15
+pipelines:
+  pull-requests:
+    '**':
+      - step:
+          name: Static code analysis
+          caches:
+            - composer-custom
+          script:
+            - apt-get update && apt-get install -y unzip
+            #- curl -sS https://getcomposer.org/installer | php -- --1 --install-dir=/usr/local/bin --filename=composer
+            - curl -OL https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar
+            - curl -OL https://squizlabs.github.io/PHP_CodeSniffer/phpcbf.phar
+            #- COPY vendor/magento/magento-coding-standard TO app/devops/magento-coding-standard AND ADD A COMMIT
+            #- composer install --ignore-platform-reqs --no-interaction
+            #- php phpcs.phar --standard=./vendor/magento/magento-coding-standard/Magento2 --severity=10 app/code app/design
+            - php phpcs.phar --standard=./app/devops/magento-coding-standard/Magento2 --severity=10 app/code app/design
+            - php phpmd.phar app/code text ./app/devops/TestPR.xml
+definitions:
+  caches:
+      composer-custom: /root/.composer/cache

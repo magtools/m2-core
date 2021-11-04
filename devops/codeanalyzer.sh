@@ -1,5 +1,7 @@
 #!/bin/bash
-
+#
+# Copy this file to the magento root
+#
 # Output path
 outputPath=var/static
 mkdir -p ${outputPath}
@@ -11,6 +13,7 @@ cmdPath[phpcs]=vendor/squizlabs/php_codesniffer/bin/phpcs;
 cmdPath[phpcbf]=vendor/squizlabs/php_codesniffer/bin/phpcbf;
 cmdPath[phpmd]=vendor/phpmd/phpmd/src/bin/phpmd;
 cmdPath[testPR]=vendor/squizlabs/php_codesniffer/bin/phpcs;
+cmdPath[testPRMD]=vendor/phpmd/phpmd/src/bin/phpmd;
 cmdPath[HELP]=showHelp;
 # Tools names
 cmd=(
@@ -37,11 +40,15 @@ if [ "${tool}" = 'HELP' ]; then
     echo '';
     exit 1;
 elif [ "${tool}" = 'testPR' ] ; then
-    # Bitbucket pipeline checks for phpcs serverity >= 9
-    path='app/code app/design'
+    # jenkins pipeline checks for phpcs serverity >= 7
+    pathCode='app/code'
+    pathDesign='app/design'
+    ruleset='vendor/magtools/m2-core/devops/TestPR.xml'
     standar=vendor/magento/magento-coding-standard/Magento2
     fileName=$(printf "%s/%s_%s.txt\n" "${outputPath}" "${tool}" "WhyHasFailed")
-    php ${cmdPath[testPR]} --standard=${standar} --severity=9 ${path} > ${fileName} # | wc -l
+    php ${cmdPath[testPR]} --standard=${standar} --severity=7 ${pathCode} ${pathDesign} > ${fileName} # | wc -l
+    echo "PHP MESS DETECTOR " >> ${fileName}
+    php ${cmdPath[testPRMD]} ${pathCode} text ${ruleset} >> ${fileName} # | wc -l
 else
     # Code paths to analyze
     cod=(app/code/*/);
