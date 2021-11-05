@@ -21,12 +21,12 @@ class VersionTest extends TestCase
     protected $moduleManager;
     protected $data = [];
 
-    protected $versionObject;
-    protected $versionReflection;
+    protected $testObject;
+    protected $testReflection;
 
     protected function setUp():void
     {
-        $this->versionObject = new Version(
+        $this->testObject = new Version(
             $this->getMockedDependency('context', 'Magento\Framework\Model\Context'),
             $this->getMockedDependency('registry', 'Magento\Framework\Registry'),
             $this->getMockedDependency('config', 'Magento\Framework\App\Config\ScopeConfigInterface'),
@@ -39,7 +39,7 @@ class VersionTest extends TestCase
             $this->data
         );
 
-        $this->versionReflection = new \ReflectionClass(Version::class);
+        $this->testReflection = new \ReflectionClass(Version::class);
     }
 
     /**
@@ -64,7 +64,7 @@ class VersionTest extends TestCase
         $this->doesNotPerformAssertions();
         $this->moduleList->method('getNames')
             ->willReturn([]);
-        $this->versionObject->afterLoad();
+        $this->testObject->afterLoad();
     }
 
     /**
@@ -74,7 +74,7 @@ class VersionTest extends TestCase
     {
         $this->expectException(LocalizedException::class);
         $this->expectExceptionMessage('Could not get module list.');
-        $this->versionObject->afterLoad();
+        $this->testObject->afterLoad();
     }
 
     /**
@@ -86,7 +86,7 @@ class VersionTest extends TestCase
         $this->moduleList->method('getNames')->willReturn(['Mtools_Core']);
         $this->moduleResource->method('getDbVersion')->willReturn("\xB1\x31");
         $this->moduleManager->method('isEnabled')->willReturn(1);
-        $this->versionObject->afterLoad();
+        $this->testObject->afterLoad();
     }
 
     /**
@@ -96,7 +96,7 @@ class VersionTest extends TestCase
      */
     public function testGetCustomValues($list, $status, $expected)
     {
-        $method = $this->versionReflection->getMethod('getCustomModules');
+        $method = $this->testReflection->getMethod('getCustomModules');
         $method->setAccessible(true);
 
         $this->moduleList->method('getNames')
@@ -108,8 +108,8 @@ class VersionTest extends TestCase
         $this->moduleManager->method('isEnabled')
             ->willReturn($status);
 
-        $getCustomModules = $method->invoke($this->versionObject);
-        $this->assertEquals($getCustomModules, $expected);
+        $result = $method->invoke($this->testObject);
+        $this->assertEquals($result, $expected);
     }
 
     /**
