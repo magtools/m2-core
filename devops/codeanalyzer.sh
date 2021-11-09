@@ -1,6 +1,7 @@
 #!/bin/bash
 #
 # Copy this file to the magento root
+# This file is part of the Mtools_Core module https://github.com/magtools/m2-core
 #
 # Output path
 outputPath=var/static
