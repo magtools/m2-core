@@ -12,6 +12,7 @@ use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Framework\Module\ModuleList;
 use Magento\Framework\Module\Manager;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Serialize\Serializer\Json;
 
 class Version extends \Magento\Framework\App\Config\Value
 {
@@ -36,6 +37,11 @@ class Version extends \Magento\Framework\App\Config\Value
     protected $moduleManager;
 
     /**
+     * @var Json
+     */
+    protected $json;
+
+    /**
      * @param Context $context
      * @param Registry $registry
      * @param ScopeConfigInterface $config
@@ -45,6 +51,7 @@ class Version extends \Magento\Framework\App\Config\Value
      * @param AbstractDb $resourceCollection
      * @param ModuleList $moduleList
      * @param Manager $moduleManager
+     * @param Json $json
      * @param array $data
      *
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
@@ -59,11 +66,13 @@ class Version extends \Magento\Framework\App\Config\Value
         AbstractDb $resourceCollection = null,
         ModuleList $moduleList,
         Manager $moduleManager,
+        Json $json,
         array $data = []
     ) {
         $this->moduleResource = $moduleResource;
         $this->moduleList = $moduleList;
         $this->moduleManager = $moduleManager;
+        $this->json = $json;
 
         parent::__construct(
             $context,
@@ -85,9 +94,8 @@ class Version extends \Magento\Framework\App\Config\Value
     }
 
     /**
-     * @return string
+     * @return bool|string
      * @throws LocalizedException
-     * @throws \Safe\Exceptions\JsonException
      */
     protected function getCustomModules()
     {
@@ -107,6 +115,6 @@ class Version extends \Magento\Framework\App\Config\Value
             }
         }
 
-        return \Safe\json_encode($result);
+        return $this->json->serialize($result);
     }
 }
