@@ -3,9 +3,11 @@
 namespace Mtools\Core\Test\Unit\Model\Config;
 
 use PHPUnit\Framework\TestCase;
-use Safe\Exceptions\JsonException;
+use InvalidArgumentException;
+//use Safe\Exceptions\JsonException; only 2.4.x
 use Mtools\Core\Model\Config\Version;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Serialize\Serializer\Json;
 
 class VersionTest extends TestCase
 {
@@ -19,6 +21,7 @@ class VersionTest extends TestCase
     protected $resourceCollection;
     protected $moduleList;
     protected $moduleManager;
+    protected $json;
     protected $data = [];
 
     protected $testObject;
@@ -26,6 +29,9 @@ class VersionTest extends TestCase
 
     protected function setUp():void
     {
+        $objectManager = new \Magento\Framework\TestFramework\Unit\Helper\ObjectManager($this);
+        $this->json = $objectManager->getObject(Json::class);
+
         $this->testObject = new Version(
             $this->getMockedDependency('context', 'Magento\Framework\Model\Context'),
             $this->getMockedDependency('registry', 'Magento\Framework\Registry'),
@@ -36,6 +42,7 @@ class VersionTest extends TestCase
             $this->getMockedDependency('resourceCollection', 'Magento\Framework\Data\Collection\AbstractDb'),
             $this->getMockedDependency('moduleList', 'Magento\Framework\Module\ModuleList'),
             $this->getMockedDependency('moduleManager', 'Magento\Framework\Module\Manager'),
+            $this->json,
             $this->data
         );
 
@@ -82,10 +89,11 @@ class VersionTest extends TestCase
      */
     public function testAfterLoadJsonException()
     {
-        $this->expectException(JsonException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->moduleList->method('getNames')->willReturn(['Mtools_Core']);
         $this->moduleResource->method('getDbVersion')->willReturn("\xB1\x31");
         $this->moduleManager->method('isEnabled')->willReturn(1);
+        $this->expectExceptionMessage('Unable to serialize value. Error: ' . json_last_error_msg());
         $this->testObject->afterLoad();
     }
 
