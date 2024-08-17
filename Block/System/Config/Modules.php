@@ -12,12 +12,7 @@ class Modules extends \Magento\Config\Block\System\Config\Form\Field
     /**
      * @const
      */
-    const TEMPLATE = 'Mtools_Core::system/config/modules.phtml';
-
-    /**
-     * @var ScopeConfigInterface
-     */
-    protected $scopeConfig;
+    public const TEMPLATE = 'Mtools_Core::system/config/modules.phtml';
 
     /**
      * @var Json
@@ -25,20 +20,12 @@ class Modules extends \Magento\Config\Block\System\Config\Form\Field
     protected $json;
 
     /**
-     * @var string
-     */
-    protected $modules;
-
-    /**
-     * @var string
-     */
-    protected $namePrefix;
-
-    /**
-     * @param Context $context
+     * Modules constructor.
+     *
+     * @param Context              $context
      * @param ScopeConfigInterface $scopeConfig
-     * @param Json $json
-     * @param array $data
+     * @param Json                 $json
+     * @param array                $data
      */
     public function __construct(
         Context $context,
@@ -46,8 +33,9 @@ class Modules extends \Magento\Config\Block\System\Config\Form\Field
         Json $json,
         array $data = []
     ) {
-        $this->scopeConfig = $scopeConfig;
+        $this->_scopeConfig = $scopeConfig;
         $this->json = $json;
+
         parent::__construct($context, $data);
     }
 
@@ -73,16 +61,10 @@ class Modules extends \Magento\Config\Block\System\Config\Form\Field
      */
     protected function _getElementHtml(AbstractElement $element)
     {
-        $this->modules = $this->json->unserialize($element->getValue());
+        $this->setModules($this->json->unserialize($element->getValue(), true));
+        $this->setNamePrefix($element->getName())
+            ->setHtmlId($element->getHtmlId());
 
         return $this->_toHtml();
-    }
-
-    /**
-     * @return string
-     */
-    public function getModules()
-    {
-        return $this->modules;
     }
 }

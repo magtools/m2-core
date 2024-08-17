@@ -42,17 +42,19 @@ class Version extends \Magento\Framework\App\Config\Value
     protected $json;
 
     /**
-     * @param Context $context
-     * @param Registry $registry
-     * @param ScopeConfigInterface $config
-     * @param TypeListInterface $cacheTypeList
-     * @param ResourceInterface $moduleResource
-     * @param AbstractResource $resource
-     * @param AbstractDb $resourceCollection
-     * @param ModuleList $moduleList
-     * @param Manager $moduleManager
-     * @param Json $json
-     * @param array $data
+     * Version constructor.
+     *
+     * @param Context               $context
+     * @param Registry              $registry
+     * @param ScopeConfigInterface  $config
+     * @param TypeListInterface     $cacheTypeList
+     * @param ResourceInterface     $moduleResource
+     * @param AbstractResource|null $resource
+     * @param AbstractDb|null       $resourceCollection
+     * @param ModuleList            $moduleList
+     * @param Manager               $moduleManager
+     * @param Json                  $json
+     * @param array                 $data
      *
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */

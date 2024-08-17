@@ -82,7 +82,7 @@ class Image extends \Magento\Framework\App\Helper\AbstractHelper
         $absolutePath = $this->_mediaDirectory->getAbsolutePath() . $image;
         $imageResized = $this->_mediaDirectory->getAbsolutePath($savePath) . $image;
 
-        if (!$this->_fileExists($savePath . $image)) {
+        if (!$this->_fileExists($savePath . $image) && !empty($image)) {
             $imageFactory = $this->_imageFactory->create();
             $imageFactory->open($absolutePath);
             $imageFactory->constrainOnly(true);

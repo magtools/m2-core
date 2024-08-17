@@ -4,7 +4,7 @@ namespace Mtools\Core\Test\Unit\Model\Config;
 
 use PHPUnit\Framework\TestCase;
 use InvalidArgumentException;
-//use Safe\Exceptions\JsonException; only 2.4.x
+use Safe\Exceptions\JsonException; //only 2.4.x
 use Mtools\Core\Model\Config\Version;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Serialize\Serializer\Json;
