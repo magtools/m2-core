@@ -19,7 +19,7 @@ class Version extends \Magento\Framework\App\Config\Value
     /**
      * @const
      */
-    const MTOOLS_VENDOR = 'Mtools';
+    protected const MTOOLS_VENDOR = 'Mtools';
 
     /**
      * @var ResourceInterface
@@ -88,7 +88,8 @@ class Version extends \Magento\Framework\App\Config\Value
     }
 
     /**
-     * @return void
+     * @return Version|void
+     * @throws LocalizedException
      */
     public function afterLoad()
     {

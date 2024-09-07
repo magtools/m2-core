@@ -9,7 +9,7 @@ class Image extends \Magento\Framework\App\Helper\AbstractHelper
     /**
      * Custom directory relative to the "media" folder
      */
-    const DIRECTORY = 'catalog/product';
+    protected const DIRECTORY = 'catalog/product';
 
     /**
      * @var \Magento\Framework\Filesystem\Directory\WriteInterface
@@ -22,8 +22,6 @@ class Image extends \Magento\Framework\App\Helper\AbstractHelper
     protected $_imageFactory;
 
     /**
-     * Store manager
-     *
      * @var \Magento\Store\Model\StoreManagerInterface
      */
     protected $_storeManager;

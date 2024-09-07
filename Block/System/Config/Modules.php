@@ -40,7 +40,7 @@ class Modules extends \Magento\Config\Block\System\Config\Form\Field
     }
 
     /**
-     * @return $this
+     * @return $this|Modules
      *
      * @SuppressWarnings(PHPMD.CamelCaseMethodName)
      */
@@ -55,9 +55,9 @@ class Modules extends \Magento\Config\Block\System\Config\Form\Field
 
     /**
      * @param AbstractElement $element
-     * @return string
      *
      * @SuppressWarnings(PHPMD.CamelCaseMethodName)
+     * @return string
      */
     protected function _getElementHtml(AbstractElement $element)
     {
