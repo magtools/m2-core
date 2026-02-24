@@ -49,11 +49,11 @@ class Version extends \Magento\Framework\App\Config\Value
      * @param ScopeConfigInterface  $config
      * @param TypeListInterface     $cacheTypeList
      * @param ResourceInterface     $moduleResource
-     * @param AbstractResource|null $resource
-     * @param AbstractDb|null       $resourceCollection
      * @param ModuleList            $moduleList
      * @param Manager               $moduleManager
      * @param Json                  $json
+     * @param AbstractResource|null $resource
+     * @param AbstractDb|null       $resourceCollection
      * @param array                 $data
      *
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
@@ -64,11 +64,11 @@ class Version extends \Magento\Framework\App\Config\Value
         ScopeConfigInterface $config,
         TypeListInterface $cacheTypeList,
         ResourceInterface $moduleResource,
-        AbstractResource $resource = null,
-        AbstractDb $resourceCollection = null,
         ModuleList $moduleList,
         Manager $moduleManager,
         Json $json,
+        ?AbstractResource $resource = null,
+        ?AbstractDb $resourceCollection = null,
         array $data = []
     ) {
         $this->moduleResource = $moduleResource;
